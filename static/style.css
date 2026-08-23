@@ -1149,6 +1149,14 @@ input[type="password"]:focus {
    RESPONSIVE DESIGN BREAKPOINTS (Desktop, Tablet, Mobile)
    ========================================================================== */
 
+/* Laptop (Large to Small Laptop: 1024px to 1440px) */
+
+@media (max-width: 25600px) and (min-width: 1025px) {
+    #mobile-sidebar-toggle {
+        display: none;
+    }
+}
+
 /* Tablet (Large to Small Tablets: 769px to 1024px) */
 @media (max-width: 1024px) and (min-width: 769px) {
     header,

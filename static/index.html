@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -9,6 +10,7 @@
     <title>Chat-Paglu</title>
     <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
     <!-- Top Application Bar -->
     <header class="app-header">
@@ -49,8 +51,9 @@
             </div>
 
             <!-- Mobile Sidebar Toggle -->
-            <button id="mobile-sidebar-toggle" class="btn btn-secondary mobile-only-btn" onclick="toggleMobileSidebar()" aria-label="Toggle Panel">
-                👥 <span class="mobile-btn-label">Members</span>
+            <button id="mobile-sidebar-toggle" class="btn btn-secondary mobile-only-btn" onclick="toggleMobileSidebar()"
+                aria-label="Toggle Panel">
+                <span class="mobile-btn-label">Members</span>
             </button>
         </div>
     </header>
@@ -63,7 +66,8 @@
         <aside id="sidebar">
             <div class="mobile-drawer-header">
                 <span id="drawer-title">Active Members & Panel</span>
-                <button class="drawer-close-btn" onclick="toggleMobileSidebar(false)" aria-label="Close Drawer">✕</button>
+                <button class="drawer-close-btn" onclick="toggleMobileSidebar(false)"
+                    aria-label="Close Drawer">✕</button>
             </div>
 
             <!-- WORLD CHAT TOP SECTION (Hidden in Private Room) -->
@@ -72,7 +76,8 @@
                 <div class="profile-card">
                     <div class="form-group mb-0">
                         <label for="username-input">Your Display Name</label>
-                        <input type="text" id="username-input" placeholder="e.g. Alice" value="" onchange="updateUsername(this.value)" />
+                        <input type="text" id="username-input" placeholder="e.g. Alice" value=""
+                            onchange="updateUsername(this.value)" />
                     </div>
                 </div>
 
@@ -98,7 +103,8 @@
                         <span>Creator:</span>
                         <span id="sidebar-creator-name" class="creator-tag-val">Loading...</span>
                     </div>
-                    <button id="terminate-btn" class="btn btn-danger btn-sm mt-2" onclick="confirmTerminateRoom()" style="display: none;">
+                    <button id="terminate-btn" class="btn btn-danger btn-sm mt-2" onclick="confirmTerminateRoom()"
+                        style="display: none;">
                         💥 Terminate Room
                     </button>
                 </div>
@@ -144,7 +150,8 @@
                 </div>
 
                 <!-- ONLY ONE Dedicated Exit Button (Visible when inside a Private Room) -->
-                <button id="chat-exit-btn" class="btn btn-exit" onclick="exitCurrentRoom()" style="display: none;" title="Exit Room">
+                <button id="chat-exit-btn" class="btn btn-exit" onclick="exitCurrentRoom()" style="display: none;"
+                    title="Exit Room">
                     🚪 Exit Room
                 </button>
             </div>
@@ -165,15 +172,8 @@
             <!-- Bottom Input Bar -->
             <footer class="input-container">
                 <form id="chat-form" class="chat-form" onsubmit="event.preventDefault(); sendMessage();">
-                    <input
-                        type="text"
-                        id="message-input"
-                        placeholder="Type your message and press Enter..."
-                        autocomplete="off"
-                        disabled
-                        maxlength="5000"
-                        oninput="handleTypingInput()"
-                    />
+                    <input type="text" id="message-input" placeholder="Type your message and press Enter..."
+                        autocomplete="off" disabled maxlength="5000" oninput="handleTypingInput()" />
                     <button type="submit" id="send-btn" class="btn btn-primary" disabled aria-label="Send Message">
                         <span>Send</span>
                         <span class="send-icon">➤</span>
@@ -195,8 +195,10 @@
             </div>
 
             <div class="modal-tabs">
-                <button class="modal-tab-btn active" id="modal-tab-join" onclick="switchModalTab('join')">Join Room</button>
-                <button class="modal-tab-btn" id="modal-tab-create" onclick="switchModalTab('create')">Create Room</button>
+                <button class="modal-tab-btn active" id="modal-tab-join" onclick="switchModalTab('join')">Join
+                    Room</button>
+                <button class="modal-tab-btn" id="modal-tab-create" onclick="switchModalTab('create')">Create
+                    Room</button>
             </div>
 
             <div id="modal-error" class="alert-box alert-error" style="display: none;"></div>
@@ -211,7 +213,8 @@
                     <label for="modal-room-input">
                         <span>Room ID</span>
                         <span id="modal-gen-wrap" style="display: none;">
-                            <a href="javascript:void(0)" onclick="generateRandomModalRoom()" class="random-btn-link">🎲 Random</a>
+                            <a href="javascript:void(0)" onclick="generateRandomModalRoom()" class="random-btn-link">🎲
+                                Random</a>
                         </span>
                     </label>
                     <input type="text" id="modal-room-input" placeholder="e.g. secret-lounge" value="secret-room" />
@@ -221,7 +224,8 @@
                     <label for="modal-password-input">Room Password</label>
                     <div class="input-wrap">
                         <input type="password" id="modal-password-input" placeholder="Enter room password" />
-                        <button type="button" class="input-inline-btn" onclick="toggleModalPasswordVisibility()" aria-label="Show password">👁</button>
+                        <button type="button" class="input-inline-btn" onclick="toggleModalPasswordVisibility()"
+                            aria-label="Show password">👁</button>
                     </div>
                 </div>
 
@@ -236,4 +240,5 @@
 
     <script src="/static/app.js"></script>
 </body>
+
 </html>
