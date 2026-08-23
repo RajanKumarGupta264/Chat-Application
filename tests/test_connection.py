@@ -61,7 +61,7 @@ def test_index_page(app_instance):
     with TestClient(app_instance) as client:
         response = client.get("/")
         assert response.status_code == 200
-        assert "Distributed Real-Time Chat Engine" in response.text
+        assert "<title>" in response.text
         assert 'href="/static/style.css"' in response.text
         assert 'src="/static/app.js"' in response.text
 

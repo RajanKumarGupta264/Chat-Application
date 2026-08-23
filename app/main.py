@@ -74,6 +74,23 @@ def create_app(
         """Initialize Redis connection and start background pub/sub bridge."""
         logging.basicConfig(level=getattr(logging, app_settings.LOG_LEVEL.upper(), logging.INFO))
         logger.info("Initializing ASGI Worker [%s] on port %d...", app_settings.WORKER_ID, app_settings.PORT)
+
+        # Auto-boot embedded Redis broker if using 127.0.0.1 and port 6379 is available
+        if "127.0.0.1" in app_settings.REDIS_URL or "localhost" in app_settings.REDIS_URL:
+            import socket
+            import threading
+            from fakeredis import TcpFakeServer
+            try:
+                test_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                test_sock.bind(("127.0.0.1", 6379))
+                test_sock.close()
+                server = TcpFakeServer(("127.0.0.1", 6379))
+                t = threading.Thread(target=server.serve_forever, daemon=True)
+                t.start()
+                logger.info("Auto-started embedded Redis broker on 127.0.0.1:6379")
+            except Exception:
+                pass
+
         await app.state.redis_bridge.start()
 
     @app.on_event("shutdown")

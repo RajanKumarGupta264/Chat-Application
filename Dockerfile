@@ -20,7 +20,7 @@ FROM python:3.11-slim as runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/home/appuser/.local/bin:${PATH}" \
-    PORT=8000
+    PORT=7860
 
 # Create non-root user and group
 RUN groupadd -g 10001 appgroup && \
@@ -37,10 +37,10 @@ COPY --chown=appuser:appgroup static/ ./static/
 
 USER appuser
 
-EXPOSE 8000
+EXPOSE 7860 8000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:' + str(__import__('os').environ.get('PORT', 8000)) + '/health', timeout=3)" || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:' + str(__import__('os').environ.get('PORT', 7860)) + '/health', timeout=3)" || exit 1
 
-ENTRYPOINT ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
+ENTRYPOINT ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-7860} --workers 1"]
 
