@@ -1,3 +1,8 @@
+/* ==========================================================================
+   CHAT-PAGLU - MODERN RESPONSIVE STYLESHEET (CSS-ONLY)
+   Supports Desktop, Tablet, Mobile devices (down to 320px)
+   ========================================================================== */
+
 :root {
     --bg-base: #0c0f17;
     --bg-surface: #141923;
@@ -16,24 +21,30 @@
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
     --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 14px;
     --header-height: 60px;
 }
 
-* {
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html {
     height: 100%;
     height: 100dvh;
+    overflow-x: hidden;
 }
 
 body {
+    height: 100%;
+    height: 100dvh;
+    width: 100%;
+    max-width: 100vw;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--bg-base);
     color: var(--text-main);
@@ -42,8 +53,12 @@ body {
     overflow: hidden;
 }
 
-/* Header */
-header {
+/* ==========================================================================
+   TOP APPLICATION BAR (HEADER)
+   ========================================================================== */
+
+header,
+.app-header {
     height: var(--header-height);
     background-color: var(--bg-surface);
     border-bottom: 1px solid var(--border-color);
@@ -57,32 +72,21 @@ header {
     z-index: 40;
     flex-shrink: 0;
     gap: 1rem;
+    width: 100%;
 }
 
+/* Brand cluster */
+.brand,
 .brand-cluster {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.5rem;
     flex-shrink: 0;
+    user-select: none;
 }
 
 .brand-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    /* background: linear-gradient(135deg, var(--primary), var(--accent-cyan)); */
-    background: linear-gradient(90deg, #ffffff, #c7d2fe);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #ffffff;
-    /* box-shadow: 0 0 12px var(--primary-glow); */
-    flex-shrink: 0;
+    display: none;
 }
 
 .brand-title {
@@ -95,7 +99,7 @@ header {
     white-space: nowrap;
 }
 
-/* Channel Navigation (World vs Private) */
+/* Mode Switcher Navigation (World vs Private) */
 .channel-nav {
     display: flex;
     align-items: center;
@@ -104,6 +108,7 @@ header {
     padding: 0.25rem;
     border-radius: 9999px;
     border: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .nav-tab {
@@ -132,10 +137,12 @@ header {
     box-shadow: 0 2px 8px var(--primary-glow);
 }
 
+/* Header Right Area */
 .header-right {
     display: flex;
     align-items: center;
     gap: 0.65rem;
+    flex-shrink: 0;
 }
 
 .status-indicators {
@@ -144,6 +151,7 @@ header {
     gap: 0.5rem;
 }
 
+/* Status Badges */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -155,6 +163,11 @@ header {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     white-space: nowrap;
+    line-height: 1.2;
+}
+
+.badge-label {
+    opacity: 0.9;
 }
 
 .dot {
@@ -162,6 +175,7 @@ header {
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
+    transition: all 0.2s ease;
 }
 
 .dot.connected {
@@ -203,6 +217,31 @@ header {
     box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
 }
 
+/* Mobile Hamburger Menu Toggle Button */
+.mobile-only-btn {
+    display: none;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    border-radius: 8px;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+#mobile-sidebar-toggle::before {
+    content: '';
+    display: inline-block;
+    width: 13px;
+    height: 2px;
+    background-color: currentColor;
+    box-shadow: 0 -4px 0 currentColor, 0 4px 0 currentColor;
+    border-radius: 2px;
+    margin-right: 3px;
+    flex-shrink: 0;
+}
+
+/* Exit Button */
 .btn-exit {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #ffffff;
@@ -241,16 +280,13 @@ header {
     color: #ffffff;
 }
 
-.mobile-only-btn {
-    display: none;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.8rem;
-    white-space: nowrap;
-}
+/* ==========================================================================
+   MAIN APPLICATION LAYOUT
+   ========================================================================== */
 
-/* Main Layout */
 main {
     flex: 1;
+    min-height: 0;
     display: flex;
     max-width: 1400px;
     width: 100%;
@@ -262,8 +298,12 @@ main {
     overflow: hidden;
 }
 
-/* Sidebar */
-aside {
+/* ==========================================================================
+   SIDEBAR PANEL
+   ========================================================================== */
+
+aside,
+aside#sidebar {
     width: 320px;
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -316,7 +356,7 @@ aside {
     margin-bottom: 0 !important;
 }
 
-/* World Banner */
+/* World Chat Info Banner */
 .world-banner {
     display: flex;
     gap: 0.65rem;
@@ -343,7 +383,8 @@ aside {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: 220px;
+    max-height: 240px;
+    flex-shrink: 0;
 }
 
 .members-card-header {
@@ -391,6 +432,7 @@ aside {
     align-items: center;
     gap: 0.4rem;
     overflow: hidden;
+    min-width: 0;
 }
 
 .member-name {
@@ -408,6 +450,7 @@ aside {
     padding: 0.05rem 0.3rem;
     border-radius: 4px;
     font-weight: 600;
+    flex-shrink: 0;
 }
 
 .member-creator-tag {
@@ -418,6 +461,7 @@ aside {
     border-radius: 4px;
     font-weight: 600;
     border: 1px solid rgba(245, 158, 11, 0.3);
+    flex-shrink: 0;
 }
 
 .member-remove-btn {
@@ -437,6 +481,30 @@ aside {
 .member-remove-btn:hover {
     background: #ef4444;
     color: #ffffff;
+}
+
+/* Cluster Stats Card */
+.cluster-stats-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    font-size: 0.775rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+}
+
+.stat-val {
+    font-family: 'Fira Code', monospace;
+    color: var(--accent-cyan);
+    font-weight: 500;
 }
 
 /* Tabs */
@@ -472,6 +540,7 @@ aside {
     box-shadow: 0 2px 8px var(--primary-glow);
 }
 
+/* Alerts */
 .alert-box {
     padding: 0.6rem 0.75rem;
     border-radius: 6px;
@@ -486,6 +555,7 @@ aside {
     color: #fca5a5;
 }
 
+/* Forms */
 .form-fields {
     display: flex;
     flex-direction: column;
@@ -617,33 +687,13 @@ input[type="password"]:focus {
     cursor: not-allowed;
 }
 
-/* Cluster Stats Card */
-.cluster-stats-card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 0.75rem;
-    font-size: 0.775rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
+/* ==========================================================================
+   CHAT CONTAINER PANEL
+   ========================================================================== */
 
-.stat-row {
-    display: flex;
-    justify-content: space-between;
-    color: var(--text-muted);
-}
-
-.stat-val {
-    font-family: 'Fira Code', monospace;
-    color: var(--accent-cyan);
-    font-weight: 500;
-}
-
-/* Chat Container */
 .chat-container {
     flex: 1;
+    min-width: 0;
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
@@ -651,7 +701,7 @@ input[type="password"]:focus {
     flex-direction: column;
     box-shadow: var(--shadow-lg);
     overflow: hidden;
-    min-width: 0;
+    height: 100%;
 }
 
 .chat-header {
@@ -685,8 +735,10 @@ input[type="password"]:focus {
 
 .chat-messages {
     flex: 1;
+    min-height: 0;
     padding: 1rem;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -739,6 +791,7 @@ input[type="password"]:focus {
     font-size: 0.725rem;
     color: var(--text-dim);
     padding: 0 0.25rem;
+    flex-wrap: wrap;
 }
 
 .message-sender {
@@ -765,6 +818,7 @@ input[type="password"]:focus {
     font-size: 0.9rem;
     line-height: 1.45;
     word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .message-bubble.incoming .message-content {
@@ -849,19 +903,26 @@ input[type="password"]:focus {
     40% { transform: scale(1); opacity: 1; }
 }
 
-/* Chat Input Bar */
+/* Chat Input Bar & Container */
+.input-container,
 .chat-input-bar {
     padding: 0.75rem 1rem;
     background-color: var(--bg-surface);
     border-top: 1px solid var(--border-color);
-    display: flex;
-    gap: 0.65rem;
-    align-items: center;
     flex-shrink: 0;
 }
 
+.chat-form {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    width: 100%;
+}
+
+.chat-form input,
 .chat-input-bar input {
     flex: 1;
+    min-width: 0;
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 9999px;
@@ -870,10 +931,12 @@ input[type="password"]:focus {
     color: var(--text-main);
 }
 
+.chat-form button,
 .chat-input-bar button {
     border-radius: 9999px;
     padding: 0.65rem 1.25rem;
     flex-shrink: 0;
+    font-size: 0.875rem;
 }
 
 .send-icon {
@@ -900,89 +963,6 @@ input[type="password"]:focus {
     background: #3f4e70;
 }
 
-/* RESPONSIVE DESIGN BREAKPOINTS */
-@media (max-width: 900px) {
-    header {
-        padding: 0 0.85rem;
-    }
-    
-    .brand-title {
-        display: none;
-    }
-    
-    .channel-nav {
-        gap: 0.2rem;
-    }
-    
-    .nav-tab {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.775rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .badge-latency,
-    .badge-worker {
-        display: none;
-    }
-
-    .mobile-only-btn {
-        display: inline-flex;
-    }
-
-    #sidebar-backdrop {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        height: 100dvh;
-        background-color: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(3px);
-        z-index: 45;
-    }
-
-    #sidebar-backdrop.active {
-        display: block;
-    }
-
-    aside#sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: min(85vw, 340px);
-        height: 100vh;
-        height: 100dvh;
-        z-index: 50;
-        border-radius: 0;
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
-        transform: translateX(-100%);
-    }
-
-    aside#sidebar.mobile-open {
-        transform: translateX(0);
-    }
-
-    .mobile-drawer-header {
-        display: flex;
-    }
-
-    main {
-        padding: 0.5rem;
-    }
-
-    .chat-container {
-        border-radius: var(--radius-md);
-    }
-}
-
-@media (min-width: 1440px) {
-    .brand-icon {
-        display: none;
-    }
-}
-
 /* ==========================================================================
    POP-UP MODAL STYLES (Private Room Join/Create)
    ========================================================================== */
@@ -992,7 +972,7 @@ input[type="password"]:focus {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     height: 100dvh;
     z-index: 100;
     display: flex;
@@ -1020,8 +1000,11 @@ input[type="password"]:focus {
     border-radius: var(--radius-lg);
     width: 100%;
     max-width: 440px;
+    max-height: calc(100dvh - 2rem);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -1043,6 +1026,7 @@ input[type="password"]:focus {
     padding: 1.1rem 1.25rem;
     border-bottom: 1px solid var(--border-subtle);
     background-color: var(--bg-card);
+    flex-shrink: 0;
 }
 
 .modal-title {
@@ -1078,6 +1062,7 @@ input[type="password"]:focus {
     display: flex;
     padding: 0.75rem 1.25rem 0 1.25rem;
     gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .modal-tab-btn {
@@ -1103,6 +1088,7 @@ input[type="password"]:focus {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow-y: auto;
 }
 
 .modal-actions {
@@ -1157,4 +1143,389 @@ input[type="password"]:focus {
 
 .mt-2 {
     margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS (Desktop, Tablet, Mobile)
+   ========================================================================== */
+
+/* Tablet (Large to Small Tablets: 769px to 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    header,
+    .app-header {
+        padding: 0 1rem;
+        gap: 0.75rem;
+    }
+
+    .brand-title {
+        font-size: 0.95rem;
+    }
+
+    .nav-tab {
+        padding: 0.3rem 0.65rem;
+        font-size: 0.8rem;
+    }
+
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.725rem;
+        gap: 0.3rem;
+    }
+
+    main {
+        padding: 0.75rem 1rem;
+        gap: 0.75rem;
+    }
+
+    aside,
+    aside#sidebar {
+        width: 270px;
+        padding: 0.85rem;
+    }
+}
+
+/* Mobile & Small Tablets (<= 768px) */
+@media (max-width: 768px) {
+    /* Multi-tier Header with dedicated status bar */
+    header,
+    .app-header {
+        height: auto;
+        min-height: 52px;
+        padding: 0.5rem 0.75rem 0.45rem 0.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        row-gap: 0.4rem;
+        column-gap: 0.5rem;
+    }
+
+    /* Top Row - Item 1: Brand */
+    .brand,
+    .brand-cluster {
+        order: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        flex-shrink: 0;
+    }
+
+    .brand-icon {
+        display: none;
+    }
+
+    .brand-title {
+        font-size: 0.95rem;
+        display: block;
+    }
+
+    /* Top Row - Item 2: Channel Mode Switcher */
+    .channel-nav {
+        order: 2;
+        padding: 0.2rem;
+        gap: 0.2rem;
+    }
+
+    .nav-tab {
+        padding: 0.25rem 0.55rem;
+        font-size: 0.75rem;
+        gap: 0.25rem;
+    }
+
+    /* Top Row - Item 3: Header Right with Hamburger Menu */
+    .header-right {
+        order: 3;
+        display: contents;
+    }
+
+    .mobile-only-btn {
+        order: 3;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.65rem;
+        font-size: 0.775rem;
+        font-weight: 600;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .mobile-only-btn:active {
+        transform: scale(0.96);
+    }
+
+    /* Bottom Row (Row 2): Prominent Status Indicators Bar (Online, Connected, Stranger) */
+    .status-indicators {
+        order: 4;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.35rem;
+        padding-top: 0.35rem;
+        border-top: 1px solid rgba(43, 53, 79, 0.6);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Keep all badges clearly visible and styled on mobile */
+    .status-indicators .badge {
+        flex: 1 1 0;
+        justify-content: center;
+        padding: 0.25rem 0.4rem;
+        font-size: 0.72rem;
+        border-radius: 6px;
+        text-align: center;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .status-indicators .badge-conn,
+    .status-indicators .badge-worker,
+    .status-indicators .badge-members {
+        display: inline-flex !important;
+    }
+
+    .status-indicators .badge-creator {
+        flex: 0 0 auto;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .badge-latency {
+        display: none;
+    }
+
+    /* Main Container */
+    main {
+        padding: 0.4rem;
+        gap: 0;
+        height: calc(100vh - 98px);
+        height: calc(100dvh - 98px);
+    }
+
+    /* Mobile Slide-in Drawer Sidebar */
+    #sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100%;
+        height: 100dvh;
+        background-color: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 55;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    #sidebar-backdrop.active {
+        display: block;
+        opacity: 1;
+    }
+
+    aside,
+    aside#sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(85vw, 320px);
+        height: 100%;
+        height: 100dvh;
+        z-index: 60;
+        border-radius: 0;
+        border-right: 1px solid var(--border-color);
+        border-top: none;
+        border-bottom: none;
+        border-left: none;
+        box-shadow: 4px 0 30px rgba(0, 0, 0, 0.7);
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 1rem;
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    aside#sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .mobile-drawer-header {
+        display: flex;
+    }
+
+    .chat-container {
+        border-radius: var(--radius-md);
+        height: 100%;
+    }
+
+    .chat-header {
+        height: 46px;
+        padding: 0 0.75rem;
+    }
+
+    .chat-room-badge {
+        font-size: 0.9rem;
+    }
+
+    .btn-exit {
+        padding: 0.3rem 0.65rem;
+        font-size: 0.75rem;
+    }
+
+    .chat-messages {
+        padding: 0.75rem 0.5rem;
+        gap: 0.6rem;
+    }
+
+    .message-bubble {
+        max-width: 88%;
+    }
+
+    .message-content {
+        padding: 0.55rem 0.8rem;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    .message-meta {
+        font-size: 0.7rem;
+        gap: 0.35rem;
+    }
+
+    .message-sender {
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .typing-indicator-bar {
+        padding: 0.3rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .input-container,
+    .chat-input-bar {
+        padding: 0.45rem 0.6rem;
+        padding-bottom: max(0.45rem, env(safe-area-inset-bottom));
+    }
+
+    .chat-form input,
+    .chat-input-bar input {
+        padding: 0.55rem 0.85rem;
+        font-size: 16px; /* Prevents auto-zoom in iOS Safari */
+    }
+
+    .chat-form button,
+    .chat-input-bar button {
+        padding: 0.55rem 0.95rem;
+        font-size: 0.825rem;
+    }
+}
+
+/* Extra Small Phones & Foldables (<= 480px) */
+@media (max-width: 480px) {
+    header,
+    .app-header {
+        padding: 0.4rem 0.5rem 0.35rem 0.5rem;
+        row-gap: 0.35rem;
+    }
+
+    .brand-title {
+        font-size: 0.875rem;
+    }
+
+    .nav-tab {
+        padding: 0.2rem 0.45rem;
+        font-size: 0.7rem;
+        gap: 0.2rem;
+    }
+
+    .mobile-only-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.725rem;
+    }
+
+    .status-indicators {
+        gap: 0.25rem;
+        padding-top: 0.25rem;
+    }
+
+    .status-indicators .badge {
+        font-size: 0.675rem;
+        padding: 0.2rem 0.3rem;
+        gap: 0.25rem;
+    }
+
+    .status-indicators .badge .dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .modal-overlay {
+        padding: 0.5rem;
+    }
+
+    .modal-card {
+        max-width: 100%;
+        border-radius: var(--radius-md);
+    }
+
+    .modal-header {
+        padding: 0.85rem 1rem;
+    }
+
+    .modal-body {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .modal-tabs {
+        padding: 0.5rem 1rem 0 1rem;
+    }
+}
+
+/* Extremely Narrow Devices (<= 360px) */
+@media (max-width: 360px) {
+    .brand-title {
+        font-size: 0.82rem;
+    }
+
+    .nav-tab {
+        padding: 0.2rem 0.35rem;
+        font-size: 0.675rem;
+    }
+
+    .mobile-btn-label {
+        display: none; /* Icon-only hamburger menu on tiny screens */
+    }
+
+    .mobile-only-btn::before {
+        margin-right: 0;
+    }
+
+    .status-indicators .badge {
+        font-size: 0.625rem;
+        padding: 0.15rem 0.25rem;
+    }
+
+    .chat-form button span:first-child {
+        display: none; /* Icon-only send button on ultra-small screens */
+    }
+
+    .chat-form button {
+        padding: 0.55rem 0.75rem;
+    }
 }
