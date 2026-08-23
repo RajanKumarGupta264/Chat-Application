@@ -1,0 +1,67 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: chat-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - chat-net
+
+  worker1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-worker-1
+    environment:
+      - WORKER_ID=worker-node-1
+      - REDIS_URL=redis://redis:6379/0
+      - PORT=8000
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - chat-net
+
+  worker2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-worker-2
+    environment:
+      - WORKER_ID=worker-node-2
+      - REDIS_URL=redis://redis:6379/0
+      - PORT=8000
+      - LOG_LEVEL=INFO
+    ports:
+      - "8001:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - chat-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: chat-nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - worker1
+      - worker2
+    networks:
+      - chat-net
+
+networks:
+  chat-net:
+    driver: bridge
+

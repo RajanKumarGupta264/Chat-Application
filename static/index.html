@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0d1117" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Chat-Paglu</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <!-- Top Application Bar -->
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-icon">⚡</div>
+            <div class="brand-info">
+                <div class="brand-title">⚡Chat-Paglu</div>
+            </div>
+        </div>
+
+        <!-- Mode Switcher Tabs -->
+        <nav class="channel-nav">
+            <button id="nav-world-btn" class="nav-tab active" onclick="switchToWorldChat()">
+                🌍 <span class="nav-label">World Chat</span>
+            </button>
+            <button id="nav-private-btn" class="nav-tab" onclick="onPrivateNavClick()">
+                🔒 <span class="nav-label" id="nav-private-label">Private Room</span>
+            </button>
+        </nav>
+
+        <div class="header-right">
+            <div class="status-indicators">
+                <div class="badge badge-conn">
+                    <span id="conn-dot" class="dot disconnected"></span>
+                    <span id="conn-status">Disconnected</span>
+                </div>
+                <div id="creator-badge" class="badge badge-creator" style="display: none;">
+                    👑 <span>Creator</span>
+                </div>
+                <div class="badge badge-worker">
+                    <span class="badge-label">Stranger:</span>
+                    <strong id="worker-display">N/A</strong>
+                </div>
+                <div class="badge badge-members">
+                    <span class="badge-label" id="badge-members-label">Online:</span>
+                    <strong id="members-display">0</strong>
+                </div>
+            </div>
+
+            <!-- Mobile Sidebar Toggle -->
+            <button id="mobile-sidebar-toggle" class="btn btn-secondary mobile-only-btn" onclick="toggleMobileSidebar()" aria-label="Toggle Panel">
+                👥 <span class="mobile-btn-label">Members</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Backdrop for mobile drawer -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="toggleMobileSidebar(false)"></div>
+
+    <main>
+        <!-- Left Sidebar Panel -->
+        <aside id="sidebar">
+            <div class="mobile-drawer-header">
+                <span id="drawer-title">Active Members & Panel</span>
+                <button class="drawer-close-btn" onclick="toggleMobileSidebar(false)" aria-label="Close Drawer">✕</button>
+            </div>
+
+            <!-- WORLD CHAT TOP SECTION (Hidden in Private Room) -->
+            <div id="sidebar-top-section">
+                <!-- User Profile Field -->
+                <div class="profile-card">
+                    <div class="form-group mb-0">
+                        <label for="username-input">Your Display Name</label>
+                        <input type="text" id="username-input" placeholder="e.g. Alice" value="" onchange="updateUsername(this.value)" />
+                    </div>
+                </div>
+
+                <!-- World Chat Info Banner -->
+                <div id="world-info-card" class="panel-section">
+                    <div class="world-banner">
+                        <span class="banner-icon">🌍</span>
+                        <div>
+                            <strong>World Chat Lounge:</strong> Global public channel with unlimited online members.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRIVATE ROOM INFO HEADER (Shown ONLY in Private Room) -->
+            <div id="sidebar-private-info" class="panel-section" style="display: none;">
+                <div class="private-room-header-card">
+                    <div class="private-card-row">
+                        <span>Room ID:</span>
+                        <strong id="sidebar-room-name">secret-room</strong>
+                    </div>
+                    <div class="private-card-row">
+                        <span>Creator:</span>
+                        <span id="sidebar-creator-name" class="creator-tag-val">Loading...</span>
+                    </div>
+                    <button id="terminate-btn" class="btn btn-danger btn-sm mt-2" onclick="confirmTerminateRoom()" style="display: none;">
+                        💥 Terminate Room
+                    </button>
+                </div>
+            </div>
+
+            <!-- ACTIVE MEMBERS LIST (Always on the Left) -->
+            <div class="members-card">
+                <div class="members-card-header">
+                    <span id="members-card-title">👥 Active Members (<span id="members-count-badge">0</span>)</span>
+                </div>
+                <div id="members-list" class="members-list">
+                    <div class="members-empty">Loading online members...</div>
+                </div>
+            </div>
+
+            <div class="cluster-stats-card">
+                <div class="stat-row">
+                    <span>Channel:</span>
+                    <span id="stat-room" class="stat-val">World</span>
+                </div>
+                <div class="stat-row">
+                    <span>Creator:</span>
+                    <span id="stat-creator" class="stat-val">None</span>
+                </div>
+                <div class="stat-row">
+                    <span>Messages:</span>
+                    <span id="stat-received" class="stat-val">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Backplane:</span>
+                    <span id="stat-transport" class="stat-val">Checking...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Panel -->
+        <section class="chat-container">
+            <div class="chat-header">
+                <div class="chat-room-badge">
+                    <span id="room-lock-icon" class="room-lock">🌍</span>
+                    <span class="room-hash">#</span>
+                    <span id="chat-header-room">world</span>
+                </div>
+
+                <!-- ONLY ONE Dedicated Exit Button (Visible when inside a Private Room) -->
+                <button id="chat-exit-btn" class="btn btn-exit" onclick="exitCurrentRoom()" style="display: none;" title="Exit Room">
+                    🚪 Exit Room
+                </button>
+            </div>
+
+            <!-- Scrollable Message Feed -->
+            <div id="chat-feed" class="chat-messages">
+                <!-- Message bubbles rendered dynamically by app.js -->
+            </div>
+
+            <!-- Typing indicator bar -->
+            <div id="typing-indicator-bar" class="typing-indicator-bar" style="display: none;">
+                <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <span id="typing-text">Someone is typing...</span>
+            </div>
+
+            <!-- Bottom Input Bar -->
+            <footer class="input-container">
+                <form id="chat-form" class="chat-form" onsubmit="event.preventDefault(); sendMessage();">
+                    <input
+                        type="text"
+                        id="message-input"
+                        placeholder="Type your message and press Enter..."
+                        autocomplete="off"
+                        disabled
+                        maxlength="5000"
+                        oninput="handleTypingInput()"
+                    />
+                    <button type="submit" id="send-btn" class="btn btn-primary" disabled aria-label="Send Message">
+                        <span>Send</span>
+                        <span class="send-icon">➤</span>
+                    </button>
+                </form>
+            </footer>
+        </section>
+    </main>
+
+    <!-- PRIVATE ROOM POP-UP MODAL -->
+    <div id="private-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-backdrop" onclick="closePrivateModal()"></div>
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>🔒 Private Room Access</span>
+                </div>
+                <button class="modal-close-btn" onclick="closePrivateModal()" aria-label="Close modal">✕</button>
+            </div>
+
+            <div class="modal-tabs">
+                <button class="modal-tab-btn active" id="modal-tab-join" onclick="switchModalTab('join')">Join Room</button>
+                <button class="modal-tab-btn" id="modal-tab-create" onclick="switchModalTab('create')">Create Room</button>
+            </div>
+
+            <div id="modal-error" class="alert-box alert-error" style="display: none;"></div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modal-username-input">Your Display Name</label>
+                    <input type="text" id="modal-username-input" placeholder="e.g. Alice" />
+                </div>
+
+                <div class="form-group">
+                    <label for="modal-room-input">
+                        <span>Room ID</span>
+                        <span id="modal-gen-wrap" style="display: none;">
+                            <a href="javascript:void(0)" onclick="generateRandomModalRoom()" class="random-btn-link">🎲 Random</a>
+                        </span>
+                    </label>
+                    <input type="text" id="modal-room-input" placeholder="e.g. secret-lounge" value="secret-room" />
+                </div>
+
+                <div class="form-group">
+                    <label for="modal-password-input">Room Password</label>
+                    <div class="input-wrap">
+                        <input type="password" id="modal-password-input" placeholder="Enter room password" />
+                        <button type="button" class="input-inline-btn" onclick="toggleModalPasswordVisibility()" aria-label="Show password">👁</button>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="modal-submit-btn" class="btn btn-primary btn-block" onclick="submitPrivateRoomModal()">
+                        Enter Private Room
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

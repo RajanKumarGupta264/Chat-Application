@@ -1,0 +1,77 @@
+from __future__ import annotations
+
+import time
+from typing import Any
+
+from fakeredis import _msgs as msgs
+from fakeredis._commands import DbIndex, command
+from fakeredis._helpers import BGSAVE_STARTED, OK, SimpleError, SimpleString, casematch
+from fakeredis.commands_mixins._mixin_base import CommandsMixinBase
+from fakeredis.model import get_all_commands_info, get_command_info
+
+
+class ServerCommandsMixin(CommandsMixinBase):
+    @command((), (bytes,), flags=msgs.FLAG_NO_SCRIPT)
+    def bgsave(self, *args: bytes) -> SimpleString:
+        if len(args) > 1 or (len(args) == 1 and not casematch(args[0], b"schedule")):
+            raise SimpleError(msgs.SYNTAX_ERROR_MSG)
+        self._server.lastsave = int(time.time())
+        return BGSAVE_STARTED
+
+    @command(())
+    def dbsize(self) -> int:
+        return len(self._db)
+
+    @command((), (bytes,))
+    def flushdb(self, *args: bytes) -> SimpleString:
+        if len(args) > 0 and (len(args) != 1 or not casematch(args[0], b"async")):
+            raise SimpleError(msgs.SYNTAX_ERROR_MSG)
+        self._db.clear()
+        return OK
+
+    @command((), (bytes,))
+    def flushall(self, *args: bytes) -> SimpleString:
+        if len(args) > 0 and (len(args) != 1 or not casematch(args[0], b"async")):
+            raise SimpleError(msgs.SYNTAX_ERROR_MSG)
+        for db in self._server.dbs.values():
+            db.clear()
+        # TODO: clear watches and/or pubsub as well?
+        return OK
+
+    @command(())
+    def lastsave(self) -> int:
+        return self._server.lastsave
+
+    @command((), flags=msgs.FLAG_NO_SCRIPT)
+    def save(self) -> SimpleString:
+        self._server.lastsave = int(time.time())
+        return OK
+
+    @command(())
+    def time(self) -> list[bytes]:
+        now_us = round(time.time() * 1_000_000)
+        now_s = now_us // 1_000_000
+        now_us %= 1_000_000
+        return [str(now_s).encode(), str(now_us).encode()]
+
+    @command((DbIndex, DbIndex))
+    def swapdb(self, index1: int, index2: int) -> SimpleString:
+        if index1 != index2:
+            db1 = self._server.dbs[index1]
+            db2 = self._server.dbs[index2]
+            db1.swap(db2)
+        return OK
+
+    @command(name="COMMAND INFO", fixed=(), repeat=(bytes,))
+    def command_info(self, *commands: bytes) -> list[Any]:
+        res = [get_command_info(cmd) for cmd in commands]
+        return res
+
+    @command(name="COMMAND COUNT", fixed=(), repeat=())
+    def command_count(self) -> int:
+        return len(get_all_commands_info())
+
+    @command(name="COMMAND", fixed=(), repeat=())
+    def command_(self) -> list[Any]:
+        res = [get_command_info(cmd) for cmd in get_all_commands_info()]
+        return res
